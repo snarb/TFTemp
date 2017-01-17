@@ -15,6 +15,10 @@ n_hidden_1 = 50 # 1st layer number of features
 n_hidden_2 = 10 # 2nd layer number of features
 n_input = 1
 
+max_value = 999999
+bits_count = len(bin(max_value)) - 2
+
+
 
 def variable_summaries(var):
     """Attach a lot of summaries to a Tensor (for TensorBoard visualization)."""
@@ -68,11 +72,13 @@ def nn_layer(input_tensor, input_dim, output_dim, layer_name, act=tf.nn.relu):
 
 # Create model
 def multilayer_perceptron(x):
-    hidden1 = nn_layer(x, 1, n_hidden_1, 'layer1')
+    hidden1 = nn_layer(x, bits_count, n_hidden_1, 'layer1')
     hidden2 = nn_layer(hidden1, n_hidden_1, n_hidden_2, 'layer2')
-    out_layer = nn_layer(hidden2, n_hidden_2, 1, 'outLayer', act = tf.identity)
+    out_layer = nn_layer(hidden2, n_hidden_2, bits_count, 'outLayer', act = tf.identity)
     return out_layer
 
+def bitfield(n):
+    return [int(digit) for digit in bin(n)[2:]]
 
 # Launch the graph.
 sess = tf.InteractiveSession()
